@@ -53,7 +53,6 @@ public class GeofenceManager(
 
     
     public IList<GeofenceRegion> GetMonitorRegions() => repository.GetList<GeofenceRegion>();
-
     
     public async Task StartMonitoring(GeofenceRegion region)
     {
@@ -70,9 +69,6 @@ public class GeofenceManager(
         repository.Remove<GeofenceRegion>(identifier);
         var mon = await this.GetMonitor();
         mon.RemoveCondition(identifier);
-        
-        if (repository.GetList<GeofenceRegion>().Count == 0)
-            this.DestroyMonitor();
     }
     
 
