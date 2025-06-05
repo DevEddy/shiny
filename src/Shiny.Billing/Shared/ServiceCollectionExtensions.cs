@@ -16,4 +16,14 @@ public static class ServiceCollectionExtensions
 #endif
         return services;
     }
+    
+    #if ANDROID
+    public static IServiceCollection AddBillingAmazon(this IServiceCollection services)
+    {
+#if ANDROID || APPLE || WINDOWS
+        services.AddShinyService<InAppBillingAmazon>();
+#endif
+        return services;
+    }
+    #endif
 }

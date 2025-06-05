@@ -11,11 +11,11 @@
 
     <ItemGroup Condition="'$(IsAndroidBuild)' == 'true'">
         <PackageReference Include="Xamarin.Android.Google.BillingClient" />
+        <EmbeddedJar Include="Platforms\Android\native\amazon-appstore-sdk-3.0.7.jar" />
     </ItemGroup>
     
     <ItemGroup Condition="'$(IsWindowsBuild)' == 'true'">
         <PackageReference Include="Microsoft.WindowsAppSDK" />
     </ItemGroup>
     
-
 </Project>
