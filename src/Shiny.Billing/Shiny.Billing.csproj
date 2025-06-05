@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFrameworks>$(DefaultTargetFrameworks)</TargetFrameworks>
+        <TargetFrameworks>$(DefaultTargetFrameworks);$(WindowsTarget)</TargetFrameworks>
         <Description>Shiny addon for all your push notification needs</Description>
     </PropertyGroup>
 

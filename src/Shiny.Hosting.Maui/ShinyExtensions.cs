@@ -36,7 +36,7 @@ public static class ShinyExtensions
                 .OnVisibilityChanged((app, args) => { })
                 .OnWindowCreated(window =>
                 {
-                    //InAppBilling.GetActiveWindow = () => window;
+                    Host.Lifecycle.OnWindowCreated(window);
                 })
             );
 #endif

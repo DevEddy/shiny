@@ -35,6 +35,9 @@ public class Host : IHost
 #elif ANDROID
     public static AndroidPlatform Platform => ServiceProvider.GetRequiredService<AndroidPlatform>();
     public static AndroidLifecycleExecutor Lifecycle => ServiceProvider.GetRequiredService<AndroidLifecycleExecutor>();
+#elif WINDOWS
+    public static WindowsPlatform Platform => ServiceProvider.GetRequiredService<WindowsPlatform>();
+    public static WindowsLifecycleExecutor Lifecycle => ServiceProvider.GetRequiredService<WindowsLifecycleExecutor>();
 #endif
 
 

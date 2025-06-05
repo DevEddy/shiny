@@ -1,40 +1,29 @@
-﻿
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Xml;
 using Microsoft.UI.Xaml;
 using Windows.Services.Store;
+using Microsoft.Extensions.Logging;
 using Microsoft.Maui.Platform;
+using Shiny.Hosting;
 
 namespace Shiny
 {
     /// <summary>
     /// Implementation for Feature
     /// </summary>
-    public partial class InAppBilling : IInAppBilling
+    public partial class InAppBilling(ILogger<InAppBilling> logger) : IInAppBilling, IWindowsLifecycle.IApplicationLifecycle
     {
-        /// <summary>
-        /// Default constructor
-        /// </summary>
-        public InAppBilling()
-        {
-        }
-        /// <summary>
-        /// Returns the active windows
-        /// </summary>
-        public static Func<Window> GetActiveWindow { get; set; }
+        private Window? _activeWindow;
 
-        StoreContext GetStoreContext()
+        private StoreContext GetStoreContext()
         {
-            var window = GetActiveWindow?.Invoke();
-            if(window is null)
-                throw new NullReferenceException("GetActiveWindow returned null");
+            if(_activeWindow is null)
+                throw new NullReferenceException("Window is null");
             
-            var handle = window.GetWindowHandle();
+            var handle = _activeWindow.GetWindowHandle();
             
             var context = StoreContext.GetDefault();
             WinRT.Interop.InitializeWithWindow.Initialize(context, handle);
@@ -43,8 +32,23 @@ namespace Shiny
         }
 
 
+        public bool IsConnected { get; set; }
         public bool InTestingMode { get; set; } = false;
-        
+        public bool IgnoreInvalidProducts { get; set; }
+        public Storefront? Storefront { get; } = null;
+
+        public Task<IEnumerable<(string Id, bool Success)>> FinalizePurchaseAsync(string[] transactionIdentifier, CancellationToken cancellationToken = default)
+            => throw new NotImplementedException();
+
+        public Task<IEnumerable<(string Id, bool Success)>> FinalizePurchaseOfProductAsync(string[] productIds, CancellationToken cancellationToken = default)
+            => throw new NotImplementedException();
+
+        public Task<bool> ConnectAsync(bool enablePendingPurchases = true, CancellationToken cancellationToken = default)
+            => Task.FromResult(true);
+
+        public Task DisconnectAsync(CancellationToken cancellationToken = default)
+            => Task.CompletedTask;
+
         public async Task<bool> ConsumePurchaseAsync(string productId, string transactionIdentifier, int quantity, CancellationToken cancellationToken = default)
         {
             var context = GetStoreContext();
@@ -67,6 +71,14 @@ namespace Shiny
                     throw new InAppBillingPurchaseException(PurchaseError.GeneralError, result.ExtendedError?.Message);
             }
         }
+
+        public string ReceiptData { get; }
+        public bool CanMakePayments { get; }
+        public void PresentCodeRedemption()
+        {
+            throw new NotImplementedException();
+        }
+
         public async Task<IEnumerable<InAppBillingProduct>> GetProductInfoAsync(ItemType itemType, string[] productIds, CancellationToken cancellationToken = default)
         {
             var context = GetStoreContext();
@@ -81,6 +93,10 @@ namespace Shiny
             return (from item in results.AddOnLicenses
                     select item.Value.ToInAppBillingPurchase()).ToList();
         }
+
+        public Task<IEnumerable<InAppBillingPurchase>> GetPurchasesHistoryAsync(ItemType itemType, CancellationToken cancellationToken = default)
+         => throw new NotImplementedException("Windows does not support purchase history retrieval. Use GetPurchasesAsync instead.");
+
         public async Task<InAppBillingPurchase> PurchaseAsync(string productId, ItemType itemType, string obfuscatedAccountId = null, string obfuscatedProfileId = null, string subOfferToken = null, CancellationToken cancellationToken = default)
         {
             var context = GetStoreContext();
@@ -197,8 +213,7 @@ namespace Shiny
 
             if (result.ExtendedError != null)
             {
-                System.Diagnostics.Debug.WriteLine("Something went wrong while getting the add-ons. " +
-                    "ExtendedError:" + result.ExtendedError);
+                logger.LogError("Something went wrong while getting the add-ons. ExtendedError: {ExtendedError}", result.ExtendedError.Message);
                 return null;
             }
 
@@ -212,8 +227,17 @@ namespace Shiny
                 }
             }
 
-            System.Diagnostics.Debug.WriteLine("The subscription was not found.");
+            logger.LogWarning("The subscription product with StoreId {StoreId} was not found in the associated store products.", subscriptionStoreId); 
             return null;
+        }
+
+        public void Dispose()
+        {
+        }
+
+        public void OnWindowCreated(Window window)
+        {
+            _activeWindow = window;
         }
     }    
 

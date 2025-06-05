@@ -17,4 +17,9 @@
         <PackageReference Include="Xamarin.AndroidX.Lifecycle.Process" />
         <PackageReference Include="Xamarin.AndroidX.Lifecycle.Common" />
     </ItemGroup>
+
+    <ItemGroup Condition="'$(IsWindowsBuild)' == 'true'">
+        <PackageReference Include="Microsoft.Maui.Core" />
+    </ItemGroup>
 </Project>
+
