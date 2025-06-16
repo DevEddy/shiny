@@ -8,7 +8,7 @@
     <ItemGroup>
         <None Include="Shiny.Core.targets" Pack="True" PackagePath="buildTransitive" />
         <PackageReference Include="System.Reactive" />
-        <PackageReference Include="Microsoft.Extensions.DependencyInjection"  />
+        <PackageReference Include="Microsoft.Extensions.DependencyInjection" />
         <PackageReference Include="Microsoft.Extensions.Logging" />
     </ItemGroup>
 
@@ -20,6 +20,10 @@
 
     <ItemGroup Condition="'$(IsWindowsBuild)' == 'true'">
         <PackageReference Include="Microsoft.Maui.Core" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Properties\" />
     </ItemGroup>
 </Project>
 
