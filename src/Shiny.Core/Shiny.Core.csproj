@@ -5,6 +5,10 @@
         <RootNamespace>Shiny</RootNamespace>
     </PropertyGroup>
 
+	<PropertyGroup>
+		<GenerateAppxPackageOnBuild>false</GenerateAppxPackageOnBuild>
+	</PropertyGroup>
+
     <ItemGroup>
         <None Include="Shiny.Core.targets" Pack="True" PackagePath="buildTransitive" />
         <PackageReference Include="System.Reactive" />
