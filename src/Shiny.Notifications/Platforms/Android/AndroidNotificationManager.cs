@@ -139,7 +139,9 @@ public class AndroidNotificationManager
                 notification.LaunchActivityType
             );
         }
-
+        if(notification.LaunchActivityExtra?.Item1 is string key && !string.IsNullOrEmpty(key))
+            launchIntent.PutExtra(notification.LaunchActivityExtra.Value.Item1, notification.LaunchActivityExtra.Value.Item2);
+        
         this.PopulateIntent(launchIntent, notification);
 
         PendingIntent pendingIntent;
