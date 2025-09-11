@@ -6,7 +6,7 @@ namespace Shiny;
 
 public static class ServiceCollectionExtensions
 {
-    public static IServiceCollection AddPushFirebaseMessaging(this IServiceCollection services, FirebaseConfiguration? config = null)
+    private static IServiceCollection AddPushFirebaseMessaging(this IServiceCollection services, FirebaseConfiguration? config = null)
     {
 #if IOS
         services.AddSingleton(config ?? new(true));

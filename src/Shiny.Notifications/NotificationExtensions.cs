@@ -2,12 +2,21 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Shiny.Notifications;
 
 
 public static class NotificationExtensions
 {
+    public static IServiceCollection AddNotifications<TDelegate>(this IServiceCollection services) where TDelegate : INotificationDelegate
+    {
+#if APPLE || ANDROID
+        return services.AddNotifications(typeof(TDelegate));
+#endif
+        return services;
+    }
+
     internal static TNotification TryToNative<TNotification>(this Notification notification) where TNotification: Notification, new()
     {
         if (notification is TNotification native)

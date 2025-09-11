@@ -15,7 +15,7 @@ public static class ServiceCollectionExtensions
     /// <param name="services"></param>
     /// <param name="configuration"></param>
     /// <returns></returns>
-    public static IServiceCollection AddNotifications<TDelegate>(this IServiceCollection services, IosConfiguration? configuration = null) where TDelegate : INotificationDelegate
+    public static IServiceCollection AddNotifications<TDelegate>(this IServiceCollection services, IosConfiguration? configuration) where TDelegate : INotificationDelegate
         => services.AddNotifications(typeof(TDelegate), configuration);
 
 
@@ -43,16 +43,6 @@ public static class ServiceCollectionExtensions
 #endif
 
 #if ANDROID
-
-    /// <summary>
-    /// Registers notification manager with Shiny
-    /// </summary>
-    /// <param name="services"></param>
-    /// <param name="options"></param>
-    /// <returns></returns>
-    public static IServiceCollection AddNotifications<TDelegate>(this IServiceCollection services) where TDelegate : INotificationDelegate
-        => services.AddNotifications(typeof(TDelegate));
-
 
     /// <summary>
     /// Registers notification manager with Shiny
