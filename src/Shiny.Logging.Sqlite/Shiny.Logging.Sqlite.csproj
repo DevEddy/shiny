@@ -9,6 +9,9 @@
         <PackageReference Include="Microsoft.Extensions.DependencyInjection" />
         <PackageReference Include="Microsoft.Extensions.Logging" />
         <PackageReference Include="sqlite-net-pcl" />
+        <!-- this fixes 16 KB page size issue on android until sqlite-net-pcl is updated
+         https://github.com/ericsink/SQLitePCL.raw/issues/621#issuecomment-3144769535 -->
+        <PackageReference Include="SQLitePCLRaw.lib.e_sqlite3" />
     </ItemGroup>
 
 </Project>

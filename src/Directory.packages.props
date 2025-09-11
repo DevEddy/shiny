@@ -12,6 +12,7 @@
     <PackageVersion Include="Microsoft.Extensions.Configuration.Json" Version="9.0.7" />
     <PackageVersion Include="Microsoft.Azure.NotificationHubs" Version="4.2.0" />
     <PackageVersion Include="sqlite-net-pcl" Version="1.9.172" />
+    <PackageVersion Include="SQLitePCLRaw.lib.e_sqlite3" Version="3.50.3" />
   </ItemGroup>
   <ItemGroup>
     <PackageVersion Include="Xamarin.AndroidX.Core" Version="1.16.0.3" />
