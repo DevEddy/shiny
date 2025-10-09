@@ -263,7 +263,8 @@ namespace Shiny
         {
             return new InAppBillingPurchase
             {
-                ProductId = license.InAppOfferToken,
+                Id = license.InAppOfferToken,
+                ProductId = license.SkuStoreId,
                 State = license.IsActive ? PurchaseState.Purchased : PurchaseState.Unknown,
                 ExpirationDate = license.ExpirationDate,
                 OriginalJson = license.ExtendedJsonData
