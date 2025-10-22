@@ -6,7 +6,7 @@
     <PackageVersion Include="Microsoft.Maui.Core" Version="9.0.120" />
     <PackageVersion Include="Microsoft.WindowsAppSDK" Version="1.7.250909003" />
     <PackageVersion Include="Nerdbank.GitVersioning" Version="3.8.118" />
-    <PackageVersion Include="Microsoft.Maui.Core" Version="9.0.90" />
+    <PackageVersion Include="Microsoft.Maui.Core" Version="9.0.120" />
     <PackageVersion Include="System.Reactive" Version="6.0.1" />
     <PackageVersion Include="Microsoft.Extensions.DependencyInjection" Version="9.0.10" />
     <PackageVersion Include="Microsoft.Extensions.Logging" Version="9.0.10" />
