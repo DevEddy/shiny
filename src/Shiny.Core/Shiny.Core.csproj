@@ -5,9 +5,14 @@
         <RootNamespace>Shiny</RootNamespace>
     </PropertyGroup>
 
+	<PropertyGroup>
+		<GenerateAppxPackageOnBuild>false</GenerateAppxPackageOnBuild>
+	</PropertyGroup>
+
     <ItemGroup>
         <None Include="Shiny.Core.targets" Pack="True" PackagePath="buildTransitive" />
-        <PackageReference Include="Microsoft.Extensions.DependencyInjection"  />
+        <PackageReference Include="System.Reactive" />
+        <PackageReference Include="Microsoft.Extensions.DependencyInjection" />
         <PackageReference Include="Microsoft.Extensions.Logging" />
     </ItemGroup>
 
@@ -17,5 +22,21 @@
         <PackageReference Include="Xamarin.AndroidX.Lifecycle.Process" />
         <PackageReference Include="Xamarin.AndroidX.Lifecycle.Common" />
         -->
+        <PackageReference Include="Xamarin.AndroidX.Lifecycle.LiveData" />
+        <PackageReference Include="Xamarin.AndroidX.Lifecycle.Runtime" />
+        <PackageReference Include="Xamarin.AndroidX.Lifecycle.Runtime.Ktx" />
+        <PackageReference Include="Xamarin.AndroidX.Lifecycle.ViewModel" />
+        <PackageReference Include="Xamarin.AndroidX.Lifecycle.ViewModel.Ktx"  />
+        <PackageReference Include="Xamarin.AndroidX.Lifecycle.ViewModelSavedState" />
+        <PackageReference Include="Xamarin.AndroidX.SavedState.SavedState.Ktx" />
+    </ItemGroup>
+
+    <ItemGroup Condition="'$(IsWindowsBuild)' == 'true'">
+        <PackageReference Include="Microsoft.Maui.Core" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Properties\" />
     </ItemGroup>
 </Project>
+

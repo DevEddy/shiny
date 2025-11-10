@@ -1,5 +1,4 @@
-﻿#if PLATFORM
-using System;
+﻿using System;
 using Microsoft.Extensions.DependencyInjection;
 using Shiny.Locations;
 #if ANDROID
@@ -9,8 +8,7 @@ using Android.Gms.Common;
 
 namespace Shiny;
 
-
-public static class GeofenceServiceCollectionExtensions
+public static class ServiceCollectionExtensions
 {
     /// <summary>
     ///
@@ -51,17 +49,7 @@ public static class GeofenceServiceCollectionExtensions
 #endif
         return services;
     }
-
-
-    /// <summary>
-    ///
-    /// </summary>
-    /// <typeparam name="T"></typeparam>
-    /// <param name="services"></param>
-    /// <returns></returns>
-    public static IServiceCollection AddGeofencing<T>(this IServiceCollection services) where T : class, IGeofenceDelegate
-        => services.AddGeofencing(typeof(T));
-
+    
 
     /// <summary>
     /// This uses background GPS in realtime broadcasts to monitor geofences - DO NOT USE THIS IF YOU DON"T KNOW WHAT YOU ARE DOING
@@ -88,4 +76,3 @@ public static class GeofenceServiceCollectionExtensions
         return services;
     }
 }
-#endif

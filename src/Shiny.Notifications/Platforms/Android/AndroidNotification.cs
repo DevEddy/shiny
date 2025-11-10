@@ -19,4 +19,5 @@ public class AndroidNotification : Notification
     public Type? LaunchActivityType { get; set; }
     public ActivityFlags LaunchActivityFlags { get; set; } = ActivityFlags.NewTask | ActivityFlags.ClearTask;
     public string? Ticker { get; set; }
+    public (string, string)? LaunchActivityExtra { get; set; }
 }
