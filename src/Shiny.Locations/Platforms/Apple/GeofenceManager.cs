@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.Versioning;
 using System.Threading;
 using System.Threading.Tasks;
@@ -18,12 +19,45 @@ public class GeofenceManager(
     IServiceProvider services,
     IPlatform platform,
     IRepository repository
-) : IGeofenceManager
+) : IGeofenceManager, IShinyStartupTask
 {
+    public async void Start()
+    {
+        try
+        {
+            logger.LogDebug("Starting GeofenceManager");
+            var regions = repository.GetList<GeofenceRegion>();
+            if (!regions.Any()) 
+                return;
+
+            await RequestAccess();
+            
+            var mon = await GetMonitor();
+            await Task.Delay(1000);
+            
+            foreach (var region in regions)
+            {
+                try
+                {
+                    AddToMonitor(mon, region);
+                }
+                catch (Exception ex)
+                {
+                    logger.LogError(ex, "Error adding region to monitor, {Exception}", ex);
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            logger.LogError(ex, "Error starting GeofenceManager");
+        }
+    }
+    
     public AccessState CurrentStatus { get; private set; } = AccessState.Unknown;
 
 
     CLServiceSession? session;
+    CLBackgroundActivitySession? bgSession;
     public async Task<AccessState> RequestAccess()
     {
         if (this.CurrentStatus != AccessState.Unknown)
@@ -32,7 +66,7 @@ public class GeofenceManager(
         var tcs = new TaskCompletionSource<AccessState>();
         this.session ??= CLServiceSession.CreateSession(
             CLServiceSessionAuthorizationRequirement.Always,
-            String.Empty,
+            "smartha",
             DispatchQueue.MainQueue, 
             diag =>
             {
@@ -48,6 +82,8 @@ public class GeofenceManager(
             }
         );
 
+        bgSession ??= CLBackgroundActivitySession.Create();
+        
         return await tcs.Task.ConfigureAwait(false);
     }
 
@@ -103,9 +139,15 @@ public class GeofenceManager(
         if (region is { NotifyOnEntry: false, NotifyOnExit: false })
             throw new InvalidOperationException("Region is not set to notify on entry or exit");
 
+        var countExisting = mon.MonitoredIdentifiers;
+        
+        logger.LogDebug("Start adding region '{Identifier}' to monitor - Count: {Count}, Regions: {RegionIds}", region.Identifier, countExisting.Length, string.Join(",", countExisting));
+        
         var rec = mon.GetMonitoringRecord(region.Identifier);
         if (rec != null)
             throw new InvalidOperationException($"A region with the identifier '{region.Identifier}' already exists");
+        
+        logger.LogDebug("Region '{Identifier}' does not exist - adding to monitor", region.Identifier);
         
         var condition = new CLCircularGeographicCondition(
             new CLLocationCoordinate2D(region.Center.Latitude, region.Center.Longitude),
@@ -113,17 +155,19 @@ public class GeofenceManager(
         );
         
         // we monitor ALL state changes for RequestState, but we only fire delegates according to flags
-        mon.AddCondition(condition, region.Identifier);
+        mon.AddCondition(condition, region.Identifier, CLMonitoringState.Unsatisfied);
     }
 
-    
-    CLMonitor? monitor;
-    async ValueTask<CLMonitor> GetMonitor() => this.monitor ??= await CLMonitor.RequestMonitorAsync(
+
+    private CLMonitor? _monitor;
+
+    private async ValueTask<CLMonitor> GetMonitor() => _monitor ??= await CLMonitor.RequestMonitorAsync(
         CLMonitorConfiguration.Create(
-            "shinygeofences",
+            "smartha",
             DispatchQueue.MainQueue,
             async (mon, evt) =>
             {
+                logger.LogDebug("CLMonitoring event received: {infos}", evt.GetReadableInfo());
                 // TODO: prevent initial state firing?
                 var lastEvent = mon.GetMonitoringRecord(evt.Identifier)!.LastEvent;
                 if (lastEvent.State == evt.State)
@@ -131,6 +175,8 @@ public class GeofenceManager(
                     logger.LogDebug("Geofence State Matches");
                     return;
                 }
+                
+                logger.LogDebug("Geofence StateChanged - {State}", evt.State);
                 
                 var region = repository.Get<GeofenceRegion>(evt.Identifier);
                 if (region != null)
@@ -149,12 +195,14 @@ public class GeofenceManager(
                             break;
                     }
                 }
+                else
+                    logger.LogWarning("Geofence region not found");
             }
         )
     );
 
 
-    async Task FireDelegate(GeofenceRegion region, CLMonitoringEvent evt)
+    private async Task FireDelegate(GeofenceRegion region, CLMonitoringEvent evt)
     {
         var status = evt.State == CLMonitoringState.Satisfied
             ? GeofenceState.Entered
@@ -174,10 +222,13 @@ public class GeofenceManager(
     
     void DestroyMonitor()
     {
-        this.monitor?.Dispose();
-        this.monitor = null;
+        this._monitor?.Dispose();
+        this._monitor = null;
         
         this.session?.Invalidate();
         this.session = null;
+        
+        bgSession?.Invalidate();
+        bgSession = null;
     }
 }
