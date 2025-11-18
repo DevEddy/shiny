@@ -39,11 +39,11 @@ public static class ObservableExtensions
         var p = This.GetPropertyInfo(expression);
         return Observable
             .FromEventPattern<PropertyChangedEventArgs>(This, nameof(INotifyPropertyChanged.PropertyChanged))
-            .StartWith(new EventPattern<PropertyChangedEventArgs>(This, new PropertyChangedEventArgs(p.Name)))
-            .Where(x => x.EventArgs.PropertyName == p.Name)
+            .StartWith(new EventPattern<PropertyChangedEventArgs>(This, new PropertyChangedEventArgs(p?.Name)))
+            .Where(x => x.EventArgs.PropertyName == p?.Name)
             .Select(x =>
             {
-                var value = (TRet?)p.GetValue(This);
+                var value = (TRet?)p?.GetValue(This);
                 return value;
             });
     }

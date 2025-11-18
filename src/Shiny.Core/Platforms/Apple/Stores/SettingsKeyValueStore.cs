@@ -39,7 +39,7 @@ public class SettingsKeyValueStore : IKeyValueStore
             TypeCode.Int32 => (int)prefs.IntForKey(key),
             TypeCode.Single => (float)prefs.FloatForKey(key),
             TypeCode.String => prefs.StringForKey(key),
-            _ => this.serializer.Deserialize(type, prefs.StringForKey(key))
+            _ => this.serializer.Deserialize(type, prefs.StringForKey(key) ?? "")
         };
     });
 

@@ -58,8 +58,8 @@ public static class ServiceProviderExtensions
     /// <param name="services"></param>
     /// <param name="required"></param>
     /// <returns></returns>
-    public static Lazy<T> GetLazyService<T>(this IServiceProvider services, bool required = false)
-        => new Lazy<T>(() => required ? services.GetRequiredService<T>() : services.GetService<T>());
+    public static Lazy<T?> GetLazyService<T>(this IServiceProvider services, bool required = false) where T: notnull
+        => new(() => required ? services.GetRequiredService<T>() : services.GetService<T>());
 
 
     /// <summary>

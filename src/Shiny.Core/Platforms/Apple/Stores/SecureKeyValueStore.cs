@@ -56,7 +56,8 @@ public class SecureKeyValueStore : IKeyValueStore
             if (resultCode == SecStatusCode.Success)
             {
                 var value = NSString.FromData(match!.ValueData!, NSStringEncoding.UTF8);
-                result = this.serializer.Deserialize(type, value);
+                if( !String.IsNullOrWhiteSpace(value))
+                    result = this.serializer.Deserialize(type, value);
             }
             return result;
         }

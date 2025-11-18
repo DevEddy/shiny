@@ -20,12 +20,11 @@ public static class StoreExtensions
             return true;
 
         var type = obj.GetType();
-        if (type.IsValueType)
-        {
-            var result = Activator.CreateInstance(type).Equals(obj);
-            return result;
-        }
-        return false;
+        if (!type.IsValueType) 
+            return false;
+        
+        var result = Activator.CreateInstance(type)?.Equals(obj);
+        return result ?? false;
     }
 
 
@@ -50,13 +49,15 @@ public static class StoreExtensions
     /// <typeparam name="T"></typeparam>
     /// <param name="store"></param>
     /// <param name="key"></param>
+    /// <param name="defaultValue"></param>
     /// <returns></returns>
-    public static T Get<T>(this IKeyValueStore store, string key, T defaultValue = default)
+    public static T Get<T>(this IKeyValueStore store, string key, T defaultValue = default!)
     {
         if (!store.Contains(key))
             return defaultValue;
 
-        return (T)store.Get(typeof(T), key);
+        var storeObj = store.Get(typeof(T), key);
+        return storeObj == null ? defaultValue : (T)storeObj;
     }
 
 
@@ -95,14 +96,14 @@ public static class StoreExtensions
     }
 
 
-
     /// <summary>
     /// This will only set the value if the setting is not currently set.  Will not fire Changed event
     /// </summary>
     /// <typeparam name="T"></typeparam>
+    /// <param name="store"></param>
     /// <param name="key"></param>
     /// <param name="value"></param>
-    public static bool SetDefault<T>(this IKeyValueStore store, string key, T value)
+    public static bool SetDefault<T>(this IKeyValueStore store, string key, T value) where T : notnull
     {
         if (store.Contains(key))
             return false;
