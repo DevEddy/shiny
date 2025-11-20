@@ -22,13 +22,13 @@
     </PropertyGroup>
 
     <PropertyGroup>
-        <WindowsTarget Condition="$([MSBuild]::IsOSPlatform('windows'))">net9.0-windows10.0.19041.0</WindowsTarget>
+        <WindowsTarget Condition="$([MSBuild]::IsOSPlatform('windows'))">net10.0-windows10.0.19041.0</WindowsTarget>
 
-        <StandardTargetFrameworks>net9.0</StandardTargetFrameworks>
-        <IosTargetFrameworks>net9.0-ios</IosTargetFrameworks>
-        <AndroidTargetFrameworks>net9.0-android35.0</AndroidTargetFrameworks>
-        <MauiPlatformTargetFrameworks>net9.0-android35.0;net9.0-ios;net9.0-maccatalyst</MauiPlatformTargetFrameworks>
-        <AppleTargetFrameworks>$(IosTargetFrameworks);net9.0-maccatalyst</AppleTargetFrameworks>
+        <StandardTargetFrameworks>net10.0</StandardTargetFrameworks>
+        <IosTargetFrameworks>net10.0-ios</IosTargetFrameworks>
+        <AndroidTargetFrameworks>net10.0-android36.0</AndroidTargetFrameworks>
+        <MauiPlatformTargetFrameworks>net10.0-android36.0;net10.0-ios;net10.0-maccatalyst</MauiPlatformTargetFrameworks>
+        <AppleTargetFrameworks>$(IosTargetFrameworks);net10.0-maccatalyst</AppleTargetFrameworks>
         <PlatformOnlyTargetFrameworks>$(AppleTargetFrameworks);$(AndroidTargetFrameworks)</PlatformOnlyTargetFrameworks>
         <DefaultMobileTargetFrameworks>$(StandardTargetFrameworks);$(IosTargetFrameworks);$(AndroidTargetFrameworks)</DefaultMobileTargetFrameworks>
         <DefaultTargetFrameworks>$(StandardTargetFrameworks);$(PlatformOnlyTargetFrameworks)</DefaultTargetFrameworks>
@@ -45,7 +45,7 @@
 
     <PropertyGroup Condition="$(TargetFramework.Contains('android'))">
         <SupportedOSPlatformVersion>26.0</SupportedOSPlatformVersion>
-        <TargetPlatformMinVersion>35.0</TargetPlatformMinVersion>
+        <TargetPlatformMinVersion>36.0</TargetPlatformMinVersion>
         <IsAndroidBuild>true</IsAndroidBuild>
         <AndroidGenerateResourceDesigner>false</AndroidGenerateResourceDesigner>
         <AndroidUseIntermediateDesignerFile>false</AndroidUseIntermediateDesignerFile>

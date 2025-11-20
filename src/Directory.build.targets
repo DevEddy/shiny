@@ -26,7 +26,7 @@
     <ItemGroup Condition="'$(IsWindowsBuild)' == 'true'">
         <Compile Include="Platforms\Windows\**\*.cs" />
         <Compile Include="Platforms\Shared\**\*.cs" />
-    </ItemGroup> 
+    </ItemGroup>
 
     <!--
     <ItemGroup Condition="'$(IsWebAssembly)' == 'true'">
