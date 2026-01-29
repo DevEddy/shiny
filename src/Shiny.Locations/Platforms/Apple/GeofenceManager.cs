@@ -57,7 +57,7 @@ public class GeofenceManager(
 
 
     CLServiceSession? session;
-    CLBackgroundActivitySession? bgSession;
+    //CLBackgroundActivitySession? bgSession;
     public async Task<AccessState> RequestAccess()
     {
         if (this.CurrentStatus != AccessState.Unknown)
@@ -82,7 +82,7 @@ public class GeofenceManager(
             }
         );
 
-        bgSession ??= CLBackgroundActivitySession.Create();
+        //bgSession ??= CLBackgroundActivitySession.Create();
         
         return await tcs.Task.ConfigureAwait(false);
     }
@@ -228,7 +228,7 @@ public class GeofenceManager(
         this.session?.Invalidate();
         this.session = null;
         
-        bgSession?.Invalidate();
-        bgSession = null;
+        //bgSession?.Invalidate();
+        //bgSession = null;
     }
 }
