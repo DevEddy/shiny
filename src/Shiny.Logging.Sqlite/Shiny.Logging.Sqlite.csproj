@@ -9,7 +9,7 @@
     <ItemGroup Condition="'$(IsAndroidBuild)' == 'true'">     
         <!-- this fixes 16 KB page size issue on android until sqlite-net-pcl is updated
          https://github.com/ericsink/SQLitePCL.raw/issues/621#issuecomment-3144769535 -->
-        <PackageReference Include="SQLitePCLRaw.lib.e_sqlite3" />
+        <PackageReference Include="SourceGear.sqlite3" />
     </ItemGroup>
     
     <ItemGroup>
