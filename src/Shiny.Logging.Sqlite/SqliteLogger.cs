@@ -17,7 +17,8 @@ public class SqliteLogger : ILogger
     }
 
 
-    public IDisposable BeginScope<TState>(TState state) => NullScope.Instance;
+    public IDisposable? BeginScope<TState>(TState state) where TState : notnull => NullScope.Instance;
+
     public bool IsEnabled(LogLevel logLevel) => logLevel >= this.configLogLevel;
     public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception? exception, Func<TState, Exception?, string> formatter)
     {
