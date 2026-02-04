@@ -14,7 +14,8 @@ public class LogStore
     [AutoIncrement]
     [PrimaryKey]
     public int Id { get; set; }
-    public string Message { get; set; }
+
+    public string Message { get; set; } = "";
     public int EventId { get; set; }
     // public string? Parameters { get; set; }
     public LogLevel LogLevel { get; set; }
